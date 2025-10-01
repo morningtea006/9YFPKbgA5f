@@ -9,7 +9,7 @@ from model_utility import (
 )
 from copy import deepcopy
 from lrs_lookup import get_grpo_lr, get_grpo_python_lr
-
+allow_find_lk_lr = False
 
 GRPO_CONFIG = {
     "0_1_b": {
@@ -332,19 +332,7 @@ def get_training_json(train_info: dict) -> dict:
     if not config.get("use_vllm", True):
         run_config["use_vllm"] = False
 
-    if model_name in ["unsloth/gemma-2-9b-it"]:
-        run_config["learning_rate"] = 1e-5
-    if model_name in ["unsloth/codegemma-7b-it", "unsloth/gemma-1.1-2b-it"]:
-        run_config["learning_rate"] = 2.5e-5
-    if model_name in [
-        "zake7749/gemma-2-2b-it-chinese-kyara-dpo",
-        "unsloth/codegemma-2b",
-    ]:
-        run_config["learning_rate"] = 1e-5
-    if model_name in ["unsloth/codegemma-7b", "unsloth/gemma-7b-it"]:
-        run_config["learning_rate"] = 8e-6
-
-    if train_info["find_lk_lr"]:
+    if train_info["find_lk_lr"] and allow_find_lk_lr:
         # get lr from lrs_lookup.py
         has_python_execution = contain_python_execution(train_info["dataset_type"])
         if not has_python_execution:
